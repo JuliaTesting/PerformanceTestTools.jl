@@ -2,5 +2,5 @@ using IRTest
 using Test
 
 @testset "IRTest.jl" begin
-    # Write your own tests here.
+    IRTest.@include("__test_ir.jl")
 end
