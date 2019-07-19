@@ -3,6 +3,7 @@
 ```@index
 ```
 
-```@autodocs
-Modules = [IRTest]
+```@docs
+IRTest
+IRTest.@include
 ```

@@ -1,5 +1,8 @@
 module IRTest
 
+# Use README as the docstring of the module:
+@doc read(joinpath(dirname(@__DIR__), "README.md"), String) IRTest
+
 using Test
 
 function run_ir_test_script(script::AbstractString, include, dir::AbstractString)

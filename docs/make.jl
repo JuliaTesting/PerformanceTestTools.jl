@@ -9,7 +9,6 @@ makedocs(;
     repo="https://github.com/tkf/IRTest.jl/blob/{commit}{path}#L{line}",
     sitename="IRTest.jl",
     authors="Takafumi Arakaki <aka.tkf@gmail.com>",
-    assets=String[],
 )
 
 deploydocs(;
