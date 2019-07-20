@@ -6,16 +6,18 @@ module IRTest
 using Test
 
 function run_ir_test_script(script::AbstractString, include, dir::AbstractString)
-    if Base.JLOptions().check_bounds == 1 || Base.JLOptions().code_coverage != 0
-        # Run IR tests in a different process as `--check-bounds=yes` or
-        # --code-coverage={user|all} is specified.
+    if (
+        Base.JLOptions().can_inline == 0 ||  # --inline=no
+        Base.JLOptions().check_bounds == 1 ||  # --check-bounds=no
+        Base.JLOptions().code_coverage != 0  # not --code-coverage=none
+    )
         script = isabspath(script) ? script : joinpath(dir, script)
         code = """
         $(Base.load_path_setup_code())
         include($(repr(script)))
         """
         cmd = Base.julia_cmd()
-        cmd = `$cmd --check-bounds=no --code-coverage=none`
+        cmd = `$cmd --check-bounds=no --code-coverage=none --inline=yes`
         if Base.JLOptions().color == 1
             cmd = `$cmd --color=yes`
         end
@@ -34,6 +36,7 @@ Include a test `script` or run it in an external process if one of the
 following flags is specified for the current process:
 
 ```sh
+--inline=no
 --check-bounds=yes
 --code-coverage=user
 --code-coverage=all
