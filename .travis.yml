@@ -9,10 +9,6 @@ julia:
   - 1.1
   - 1.2
   - nightly
-matrix:
-  allow_failures:
-    - julia: nightly
-  fast_finish: true
 notifications:
   email: false
 
@@ -24,10 +20,13 @@ if: branch = master OR tag IS present OR type != push
 after_success:
   - julia -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
   - julia -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Coveralls.submit(process_folder())'
+
 jobs:
+  allow_failures:
+    - julia: nightly
+  fast_finish: true
   include:
     - stage: Documentation
-      os: linux
       script: julia --project=docs --color=yes -e '
           using Pkg;
           Pkg.develop(PackageSpec(path=pwd()));
