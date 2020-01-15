@@ -22,5 +22,5 @@ end
 
 @testset begin
     v = Float64[]
-    @test nmatches(r"fadd fast <4 x double>", llvm_ir(vdot, (v, v))) >= 4
+    @test nmatches(r"fadd fast <[0-9]+ x double>", llvm_ir(vdot, (v, v))) >= 4
 end
