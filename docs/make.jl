@@ -1,16 +1,16 @@
-using Documenter, IRTest
+using Documenter, PerformanceTestTools
 
 makedocs(;
-    modules=[IRTest],
+    modules=[PerformanceTestTools],
     format=Documenter.HTML(),
     pages=[
         "Home" => "index.md",
     ],
-    repo="https://github.com/tkf/IRTest.jl/blob/{commit}{path}#L{line}",
-    sitename="IRTest.jl",
+    repo="https://github.com/tkf/PerformanceTestTools.jl/blob/{commit}{path}#L{line}",
+    sitename="PerformanceTestTools.jl",
     authors="Takafumi Arakaki <aka.tkf@gmail.com>",
 )
 
 deploydocs(;
-    repo="github.com/tkf/IRTest.jl",
+    repo="github.com/tkf/PerformanceTestTools.jl",
 )
