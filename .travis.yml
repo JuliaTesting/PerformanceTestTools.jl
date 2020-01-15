@@ -27,6 +27,7 @@ after_success:
 jobs:
   include:
     - stage: Documentation
+      os: linux
       script: julia --project=docs --color=yes -e '
           using Pkg;
           Pkg.develop(PackageSpec(path=pwd()));
