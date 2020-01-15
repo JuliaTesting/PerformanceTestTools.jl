@@ -1,7 +1,7 @@
-module IRTest
+module PerformanceTestTools
 
 # Use README as the docstring of the module:
-@doc read(joinpath(dirname(@__DIR__), "README.md"), String) IRTest
+@doc read(joinpath(dirname(@__DIR__), "README.md"), String) PerformanceTestTools
 
 using Test
 
@@ -30,7 +30,7 @@ function run_ir_test_script(script::AbstractString, include, dir::AbstractString
 end
 
 """
-    IRTest.@include(script)
+    PerformanceTestTools.@include(script)
 
 Include a test `script` or run it in an external process if one of the
 following flags is specified for the current process:

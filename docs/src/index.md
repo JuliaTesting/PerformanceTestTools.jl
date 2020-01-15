@@ -1,9 +1,9 @@
-# IRTest.jl
+# PerformanceTestTools.jl
 
 ```@index
 ```
 
 ```@docs
-IRTest
-IRTest.@include
+PerformanceTestTools
+PerformanceTestTools.@include
 ```
