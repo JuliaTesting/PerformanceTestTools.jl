@@ -42,8 +42,8 @@ following flags is specified for the current process:
 --code-coverage=all
 ```
 
-Test `script` should contain `@test` to appropriately fail when there
-is a failing test.
+Test `script` should contain, e.g., `@test` to appropriately throw
+when there is a failing test.
 """
 macro include(script)
     dir = dirname(string(__source__.file))
