@@ -25,11 +25,3 @@ jobs:
   allow_failures:
     - julia: nightly
   fast_finish: true
-  include:
-    - stage: Documentation
-      script: julia --project=docs --color=yes -e '
-          using Pkg;
-          Pkg.develop(PackageSpec(path=pwd()));
-          Pkg.instantiate();
-          include("docs/make.jl");'
-      after_success: skip

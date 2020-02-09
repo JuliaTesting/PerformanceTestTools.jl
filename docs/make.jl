@@ -13,4 +13,5 @@ makedocs(;
 
 deploydocs(;
     repo="github.com/tkf/PerformanceTestTools.jl",
+    push_preview = true,
 )
