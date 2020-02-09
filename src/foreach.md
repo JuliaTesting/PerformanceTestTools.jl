@@ -53,5 +53,15 @@ PerformanceTestTools.@include_foreach(
 )
 ```
 
+To run a script with different CLI spces in parallel:
+
+```julia
+PerformanceTestTools.@include_foreach(
+    "test.jl",
+    [nothing, [`--compile=min`], [`--check-bounds=no`]],
+    parallel = true,
+)
+```
+
 # Keyword Arguments
-- `parallel::Bool = true`: run scripts in parallel (default).
+- `parallel::Bool = false`: run scripts in parallel.

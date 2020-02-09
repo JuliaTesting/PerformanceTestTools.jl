@@ -11,7 +11,7 @@ using Test
     PerformanceTestTools.@include_foreach(
         "__test_a_eq_b.jl",
         [["A" => "1", "B" => "1"], ["A" => "2", "B" => "2", `--compile=min`]],
-        parallel = false,
+        parallel = true,
     )
 end
 
@@ -21,12 +21,14 @@ end
         PerformanceTestTools.@include_foreach(
             "__test_a_eq_b.jl",
             [["A" => "1", "B" => "2"]],
+            parallel = true,
         )
     end
     @testset XFailTestSet "envs and opts" begin
         PerformanceTestTools.@include_foreach(
             "__test_a_eq_b.jl",
             [["A" => "1", "B" => "2", `--compile=min`]],
+            parallel = true,
         )
     end
     @testset XFailTestSet "with in-process" begin
@@ -34,6 +36,7 @@ end
             PerformanceTestTools.@include_foreach(
                 "__test_a_eq_b.jl",
                 [nothing, [`--compile=min`]],
+                parallel = true,
             )
         end
     end

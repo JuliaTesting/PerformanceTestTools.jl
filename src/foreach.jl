@@ -55,7 +55,7 @@ Like [`@include_foreach`](@ref) but relative path `script` is resolved
 with respect to the current working directory, instead of the file in
 which this function is called.
 """
-function include_foreach(script, speclist0; parallel::Bool = true, __include = _include)
+function include_foreach(script, speclist0; parallel::Bool = false, __include = _include)
     speclist = CLISpec[]
     hasnothing = false
     for x in speclist0
