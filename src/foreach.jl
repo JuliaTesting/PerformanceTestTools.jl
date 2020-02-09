@@ -36,7 +36,7 @@ function CLISpec(spec::AbstractVector)
     return CLISpec(options, env)
 end
 
-function cmd_from_spec(spec::CLISpec, cmd = _julia_cmd())
+function env_from_spec(spec::CLISpec)
     env = copy(ENV)
     for (k, v) in spec.env
         if v === nothing
@@ -45,7 +45,7 @@ function cmd_from_spec(spec::CLISpec, cmd = _julia_cmd())
             env[k] = v
         end
     end
-    return setenv(`$cmd $(spec.options)`, env)
+    return env
 end
 
 """
@@ -73,13 +73,14 @@ function include_foreach(script, speclist0; parallel::Bool = true, __include = _
         _map = map
     end
     results = _map(speclist) do spec
-        cmd = cmd_from_spec(spec)
+        env = env_from_spec(spec)
         code = """
         $(Base.load_path_setup_code())
         include($(repr(script)))
         """
+        cmd = setenv(`$(_julia_cmd()) -e $code $(spec.options)`, env)
         @info "Running `$script` in a subprocess..." spec
-        ok = success(pipeline(`$cmd -e $code`; stdout = stdout, stderr = stderr))
+        ok = success(pipeline(cmd; stdout = stdout, stderr = stderr))
         @info "Running `$script` in a subprocess...DONE"
         return ok
     end
