@@ -35,7 +35,7 @@ To test both branches of `if @generated`:
 ```julia
 PerformanceTestTools.@include_foreach(
     "tests_using_generated_functions.jl",
-    [nothing, `--compile=min`],
+    [nothing, [`--compile=min`]],
 )
 ```
 
@@ -49,7 +49,7 @@ PerformanceTestTools.@include_foreach(
 
 PerformanceTestTools.@include_foreach(
     "tests_using_generated_functions.jl",
-    [nothing, "--compile=min" in Base.julia_cmd() ? `--compile=yes` : `--compile=min`],
+    [nothing, ["--compile=min" in Base.julia_cmd() ? `--compile=yes` : `--compile=min`]],
 )
 ```
 
