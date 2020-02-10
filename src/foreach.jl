@@ -6,7 +6,7 @@ struct CLISpec
 end
 
 function Base.show(io::IO, ::MIME"text/plain", spec::CLISpec)
-    print(io, "CLISpec: ")
+    get(io, :typeinfo, Any) == CLISpec|| print(io, "CLISpec: ")
     for (k, v) in spec.env
         print(io, k, '=')
         if v === nothing
@@ -48,6 +48,51 @@ function env_from_spec(spec::CLISpec)
     return env
 end
 
+readboth(cmd, ::Type{String}) = String(readboth(cmd))
+function readboth(cmd)
+    io = IOBuffer()
+    run(pipeline(cmd, stdout = io, stderr = io, stdin = devnull))
+    return take!(io)
+end
+
+struct IncludeResult
+    script::String
+    spec::CLISpec
+    output::String
+    success::Bool
+    proc::Base.Process
+end
+
+function Base.show(io::IO, ::MIME"text/plain", result::IncludeResult)
+    color = result.success ? :green : :red
+
+    printstyled(io, "┌"; color = color)
+    printstyled(io, " Test result: ", bold = true)
+    if result.success
+        printstyled(io, "All success"; color = color, bold = true)
+    else
+        printstyled(io, "At least one failure"; color = color, bold = true)
+    end
+    println(io)
+
+    printstyled(io, '│'; color = color)
+    printstyled(io, " Script : "; color = :blue)
+    printstyled(io, result.script; bold = true)
+    println(io)
+
+    printstyled(io, '│'; color = color)
+    printstyled(io, " Command: "; color = :blue)
+    show(IOContext(io, :typeinfo => typeof(result.spec)), MIME"text/plain"(), result.spec)
+    println(io)
+
+    for line in eachline(IOBuffer(result.output))
+        printstyled(io, '│'; color = color)
+        println(io, ' ', line)
+    end
+    printstyled(io, "└"; color = color)
+    println(io)
+end
+
 """
     PerformanceTestTools.include_foreach(script, speclist)
 
@@ -80,9 +125,26 @@ function include_foreach(script, speclist0; parallel::Bool = false, __include = 
         """
         cmd = setenv(`$(_julia_cmd()) -e $code $(spec.options)`, env)
         @info "Running `$script` in a subprocess..." spec
-        ok = success(pipeline(cmd; stdout = stdout, stderr = stderr))
+        if parallel
+            io = IOBuffer()
+            proc = run(pipeline(
+                ignorestatus(cmd);
+                stdout = io,
+                stderr = io,
+                stdin = devnull,
+            ))
+            output = String(take!(io))
+        else
+            proc = run(pipeline(
+                ignorestatus(cmd);
+                stdout = stdout,
+                stderr = stderr,
+                stdin = devnull,
+            ))
+            output = ""
+        end
         @info "Running `$script` in a subprocess...DONE"
-        return ok
+        return IncludeResult(script, spec, output, success(proc), proc)
     end
     try
         if hasnothing
@@ -92,9 +154,13 @@ function include_foreach(script, speclist0; parallel::Bool = false, __include = 
         end
     finally
         if parallel
+            istaskdone(results) || @info "Waiting for parallel tasks..."
             results = fetch(results)
+            for r in results
+                show(stdout, "text/plain", r)
+            end
         end
-        @test all(results)
+        @test all(x -> x.success, results)
     end
 end
 
