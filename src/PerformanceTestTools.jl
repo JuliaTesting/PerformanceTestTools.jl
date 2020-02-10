@@ -3,7 +3,18 @@ module PerformanceTestTools
 # Use README as the docstring of the module:
 @doc read(joinpath(dirname(@__DIR__), "README.md"), String) PerformanceTestTools
 
+using Base.Meta: isexpr
 using Test
+
+_include(path) = include(Module(), path)
+
+function _julia_cmd()
+    cmd = Base.julia_cmd()
+    if Base.JLOptions().color == 1
+        cmd = `$cmd --color=yes`
+    end
+    return cmd
+end
 
 function run_ir_test_script(script::AbstractString, include, dir::AbstractString)
     if (
@@ -16,11 +27,8 @@ function run_ir_test_script(script::AbstractString, include, dir::AbstractString
         $(Base.load_path_setup_code())
         include($(repr(script)))
         """
-        cmd = Base.julia_cmd()
+        cmd = _julia_cmd()
         cmd = `$cmd --check-bounds=no --code-coverage=none --inline=yes`
-        if Base.JLOptions().color == 1
-            cmd = `$cmd --color=yes`
-        end
         @info "Running IR test in a subprocess..." cmd script
         @test success(pipeline(`$cmd -e $code`; stdout=stdout, stderr=stderr))
         @info "Running IR test in a subprocess...DONE"
@@ -49,5 +57,8 @@ macro include(script)
     dir = dirname(string(__source__.file))
     esc(:($run_ir_test_script($script, include, $dir)))
 end
+
+include("foreach.jl")
+include("testing.jl")
 
 end # module
