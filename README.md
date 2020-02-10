@@ -5,7 +5,7 @@
 [![Build Status](https://travis-ci.com/tkf/PerformanceTestTools.jl.svg?branch=master)](https://travis-ci.com/tkf/PerformanceTestTools.jl)
 [![Codecov](https://codecov.io/gh/tkf/PerformanceTestTools.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/tkf/PerformanceTestTools.jl)
 [![Coveralls](https://coveralls.io/repos/github/tkf/PerformanceTestTools.jl/badge.svg?branch=master)](https://coveralls.io/github/tkf/PerformanceTestTools.jl?branch=master)
-[![GitHub commits since tagged version](https://img.shields.io/github/commits-since/tkf/PerformanceTestTools.jl/v0.1.0.svg?style=social&logo=github)](https://github.com/tkf/PerformanceTestTools.jl)
+[![GitHub commits since tagged version](https://img.shields.io/github/commits-since/tkf/PerformanceTestTools.jl/v0.1.1.svg?style=social&logo=github)](https://github.com/tkf/PerformanceTestTools.jl)
 
 Testing generated IRs inside CI is useful for avoiding performance
 regression.  However, test suites are normally run under flags like
