@@ -48,11 +48,24 @@ function env_from_spec(spec::CLISpec)
     return env
 end
 
-readboth(cmd, ::Type{String}) = String(readboth(cmd))
-function readboth(cmd)
-    io = IOBuffer()
-    run(pipeline(cmd, stdout = io, stderr = io, stdin = devnull))
-    return take!(io)
+if VERSION < v"1.1"
+    function _readboth(cmd)
+        pipe = Pipe()
+        try
+            reader = @async read(pipe)
+            proc = run(pipeline(cmd, stdout = pipe, stderr = pipe, stdin = devnull))
+            close(pipe)
+            return proc, fetch(reader)
+        finally
+            close(pipe)
+        end
+    end
+else
+    function _readboth(cmd)
+        io = IOBuffer()
+        proc = run(pipeline(cmd, stdout = io, stderr = io, stdin = devnull))
+        return proc, take!(io)
+    end
 end
 
 struct IncludeResult
@@ -126,14 +139,8 @@ function include_foreach(script, speclist0; parallel::Bool = false, __include = 
         cmd = setenv(`$(_julia_cmd()) -e $code $(spec.options)`, env)
         @info "Running `$script` in a subprocess..." spec
         if parallel
-            io = IOBuffer()
-            proc = run(pipeline(
-                ignorestatus(cmd);
-                stdout = io,
-                stderr = io,
-                stdin = devnull,
-            ))
-            output = String(take!(io))
+            proc, output = _readboth(cmd)
+            output = String(output)
         else
             proc = run(pipeline(
                 ignorestatus(cmd);
