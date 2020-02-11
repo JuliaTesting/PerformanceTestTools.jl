@@ -6,7 +6,7 @@ struct CLISpec
 end
 
 function Base.show(io::IO, ::MIME"text/plain", spec::CLISpec)
-    get(io, :typeinfo, Any) == CLISpec|| print(io, "CLISpec: ")
+    get(io, :typeinfo, Any) == CLISpec || print(io, "CLISpec: ")
     for (k, v) in spec.env
         print(io, k, '=')
         if v === nothing
