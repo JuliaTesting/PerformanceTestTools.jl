@@ -1,7 +1,7 @@
 name = "PerformanceTestTools"
 uuid = "dc46b164-d16f-48ec-a853-60448fc869fe"
 authors = ["Takafumi Arakaki <aka.tkf@gmail.com>"]
-version = "0.1.2-DEV"
+version = "0.1.2"
 
 [deps]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
