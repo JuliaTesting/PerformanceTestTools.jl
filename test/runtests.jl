@@ -17,12 +17,14 @@ end
 
 @testset "expected failures" begin
     @info "=== Starting xfail tests ==="
-    @testset XFailTestSet "only envs" begin
-        PerformanceTestTools.@include_foreach(
-            "__test_a_eq_b.jl",
-            [["A" => "1", "B" => "2"]],
-            parallel = true,
-        )
+    @testset for parallel in [false, true]
+        @testset XFailTestSet "only envs" begin
+            PerformanceTestTools.@include_foreach(
+                "__test_a_eq_b.jl",
+                [["A" => "1", "B" => "2"]],
+                parallel = parallel,
+            )
+        end
     end
     @testset XFailTestSet "envs and opts" begin
         PerformanceTestTools.@include_foreach(
