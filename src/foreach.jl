@@ -139,7 +139,7 @@ function include_foreach(script, speclist0; parallel::Bool = false, __include = 
         cmd = setenv(`$(_julia_cmd()) -e $code $(spec.options)`, env)
         @info "Running `$script` in a subprocess..." spec
         if parallel
-            proc, output = _readboth(cmd)
+            proc, output = _readboth(ignorestatus(cmd))
             output = String(output)
         else
             proc = run(pipeline(
