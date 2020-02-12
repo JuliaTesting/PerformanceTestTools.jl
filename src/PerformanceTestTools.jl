@@ -10,6 +10,7 @@ _include(path) = include(Module(), path)
 
 function _julia_cmd()
     cmd = Base.julia_cmd()
+    cmd = `$cmd --startup-file=no`
     if Base.JLOptions().color == 1
         cmd = `$cmd --color=yes`
     end
